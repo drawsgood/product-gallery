@@ -10,7 +10,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 virtualenv $ENV
 
 # Install django and dependencies
-$ENV/bin/pip install django djangorestframework
+$ENV/bin/pip install django djangorestframework pillow
 
 # Update the project's folder path in productgallery/settings.py
 ESCAPED_DIR=$(sed 's/\//\\\//g' <<< "$DIR")
@@ -23,6 +23,9 @@ SECRET_KEY=$(sed 's/\&/\\\&/g' <<< $SECRET_KEY)
 
 # Insert secret key into productgallery/settings.py
 sed -i -e "s/INSERT_SECRET_KEY/$SECRET_KEY/g" $DIR/productgallery/settings.py
+
+# Migrate
+$ENV/bin/python manage.py migrate
 
 # Syncdb
 $ENV/bin/python manage.py syncdb
